@@ -2,13 +2,13 @@
 
 #include "_cgo_export.h"
 
-void gio_runOnMain(uintptr_t handle) {
+void guipkg2_runOnMain(uintptr_t handle) {
 	dispatch_async(dispatch_get_main_queue(), ^{
-		gio_runFunc(handle);
+		guipkg2_runFunc(handle);
 	});
 }
 
-void gio_createWindow(CGFloat width, CGFloat height) {
+void guipkg2_createWindow(CGFloat width, CGFloat height) {
 	@autoreleasepool {
 		NSRect rect = NSMakeRect(0, 0, width, height);
 		NSUInteger styleMask = NSTitledWindowMask |
@@ -36,11 +36,11 @@ static AppListener *appListener;
 @implementation AppListener
 - (void)launchFinished:(NSNotification *)notification {
 	appListener = nil;
-	gio_onFinishLaunching();
+	guipkg2_onFinishLaunching();
 }
 @end
 
-void gio_init() {
+void guipkg2_init() {
 	@autoreleasepool {
 		appListener = [[AppListener alloc] init];
 		[[NSNotificationCenter defaultCenter] addObserver:appListener
@@ -62,7 +62,7 @@ void gio_init() {
 }
 @end
 
-void gio_main() {
+void guipkg2_main() {
 	@autoreleasepool {
 		[NSApplication sharedApplication];
 		GioAppDelegate *del = [[GioAppDelegate alloc] init];
