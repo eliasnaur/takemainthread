@@ -2,6 +2,14 @@
 
 #include "_cgo_export.h"
 
+#include "_cgo_export.h"
+
+void gio_runOnMain(uintptr_t handle) {
+	dispatch_async(dispatch_get_main_queue(), ^{
+		gio_runFunc(handle);
+	});
+}
+
 void gio_createWindow(CGFloat width, CGFloat height) {
 	@autoreleasepool {
 		NSRect rect = NSMakeRect(0, 0, width, height);
@@ -22,6 +30,8 @@ void gio_createWindow(CGFloat width, CGFloat height) {
 @interface AppListener : NSObject
 @end
 
+// Hold on to the app listener because NSNotificationCenter
+// doesn't.
 static AppListener *appListener;
 
 @implementation AppListener
@@ -40,6 +50,8 @@ void gio_init() {
 												   object:nil];
 	}
 }
+
+// The following is app global initialization, which is optional.
 
 @interface GioAppDelegate : NSObject<NSApplicationDelegate>
 @end

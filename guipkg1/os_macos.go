@@ -6,12 +6,14 @@ package guipkg1
 
 #include <AppKit/AppKit.h>
 
-__attribute__ ((visibility ("hidden"))) void gio_main(void);
-__attribute__ ((visibility ("hidden"))) void gio_init(void);
-__attribute__ ((visibility ("hidden"))) void gio_createWindow(CGFloat width, CGFloat height);
+extern void gio_init(void);
+extern void gio_main(void);
+extern void gio_runOnMain(uintptr_t handle);
+extern void gio_createWindow(CGFloat width, CGFloat height);
 
 */
 import "C"
+import "runtime/cgo"
 
 func init() {
 	C.gio_init()
@@ -33,4 +35,17 @@ func NewWindow() {
 
 func Main() {
 	C.gio_main()
+}
+
+// runOnMain runs the function on the main thread.
+func runOnMain(f func()) {
+	C.gio_runOnMain(C.uintptr_t(cgo.NewHandle(f)))
+}
+
+//export gio_runFunc
+func gio_runFunc(h C.uintptr_t) {
+	handle := cgo.Handle(h)
+	defer handle.Delete()
+	f := handle.Value().(func())
+	f()
 }
