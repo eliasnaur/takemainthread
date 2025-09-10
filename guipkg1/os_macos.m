@@ -17,6 +17,7 @@ void gio_createWindow(CGFloat width, CGFloat height) {
 													   styleMask:styleMask
 														 backing:NSBackingStoreBuffered
 														   defer:NO];
+		window.releasedWhenClosed = NO;
 		[window makeKeyAndOrderFront:nil];
 	}
 }
@@ -25,9 +26,30 @@ void gio_createWindow(CGFloat width, CGFloat height) {
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
 	[NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
 	[NSApp activateIgnoringOtherApps:YES];
+}
+@end
+
+@interface AppListener : NSObject
+@end
+
+static AppListener *appListener;
+
+@implementation AppListener
+- (void)launchFinished:(NSNotification *)notification {
+	appListener = nil;
 	gio_onFinishLaunching();
 }
 @end
+
+void gio_init() {
+	@autoreleasepool {
+		appListener = [[AppListener alloc] init];
+		[[NSNotificationCenter defaultCenter] addObserver:appListener
+												 selector:@selector(launchFinished:)
+													 name:NSApplicationDidFinishLaunchingNotification
+												   object:nil];
+	}
+}
 
 void gio_main() {
 	@autoreleasepool {
