@@ -2,13 +2,13 @@
 
 #include "_cgo_export.h"
 
-void guipkg1_runOnMain(uintptr_t handle) {
+void gio_runOnMain(uintptr_t handle) {
 	dispatch_async(dispatch_get_main_queue(), ^{
-		guipkg1_runFunc(handle);
+		gio_runFunc(handle);
 	});
 }
 
-void guipkg1_createWindow(CGFloat width, CGFloat height) {
+void gio_createWindow(CGFloat width, CGFloat height) {
 	@autoreleasepool {
 		NSRect rect = NSMakeRect(0, 0, width, height);
 		NSUInteger styleMask = NSTitledWindowMask |
@@ -25,23 +25,23 @@ void guipkg1_createWindow(CGFloat width, CGFloat height) {
 	}
 }
 
-@interface GUIPkg1AppListener : NSObject
+@interface AppListener : NSObject
 @end
 
 // Hold on to the app listener because NSNotificationCenter
 // doesn't.
-static GUIPkg1AppListener *appListener;
+static AppListener *appListener;
 
-@implementation GUIPkg1AppListener
+@implementation AppListener
 - (void)launchFinished:(NSNotification *)notification {
 	appListener = nil;
-	guipkg1_onFinishLaunching();
+	gio_onFinishLaunching();
 }
 @end
 
-void guipkg1_init() {
+void gio_init() {
 	@autoreleasepool {
-		appListener = [[GUIPkg1AppListener alloc] init];
+		appListener = [[AppListener alloc] init];
 		[[NSNotificationCenter defaultCenter] addObserver:appListener
 												 selector:@selector(launchFinished:)
 													 name:NSApplicationDidFinishLaunchingNotification
@@ -51,20 +51,20 @@ void guipkg1_init() {
 
 // The following is app global initialization, which is optional.
 
-@interface GUIPkg1AppDelegate : NSObject<NSApplicationDelegate>
+@interface GioAppDelegate : NSObject<NSApplicationDelegate>
 @end
 
-@implementation GUIPkg1AppDelegate
+@implementation GioAppDelegate
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
 	[NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
 	[NSApp activateIgnoringOtherApps:YES];
 }
 @end
 
-void guipkg1_main() {
+void gio_main() {
 	@autoreleasepool {
 		[NSApplication sharedApplication];
-		GUIPkg1AppDelegate *del = [[GUIPkg1AppDelegate alloc] init];
+		GioAppDelegate *del = [[GioAppDelegate alloc] init];
 		[NSApp setDelegate:del];
 
 		NSMenuItem *mainMenu = [NSMenuItem new];
