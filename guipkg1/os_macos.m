@@ -2,9 +2,6 @@
 
 #include "_cgo_export.h"
 
-@interface GioAppDelegate : NSObject<NSApplicationDelegate>
-@end
-
 void gio_createWindow(CGFloat width, CGFloat height) {
 	@autoreleasepool {
 		NSRect rect = NSMakeRect(0, 0, width, height);
@@ -21,13 +18,6 @@ void gio_createWindow(CGFloat width, CGFloat height) {
 		[window makeKeyAndOrderFront:nil];
 	}
 }
-
-@implementation GioAppDelegate
-- (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
-	[NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
-	[NSApp activateIgnoringOtherApps:YES];
-}
-@end
 
 @interface AppListener : NSObject
 @end
@@ -50,6 +40,16 @@ void gio_init() {
 												   object:nil];
 	}
 }
+
+@interface GioAppDelegate : NSObject<NSApplicationDelegate>
+@end
+
+@implementation GioAppDelegate
+- (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
+	[NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
+	[NSApp activateIgnoringOtherApps:YES];
+}
+@end
 
 void gio_main() {
 	@autoreleasepool {
