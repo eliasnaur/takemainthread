@@ -13,7 +13,11 @@ extern void gio_createWindow(CGFloat width, CGFloat height);
 
 */
 import "C"
-import "runtime/cgo"
+import (
+	"runtime/cgo"
+
+	"github.com/eliasnaur/takemainthread/mainthread"
+)
 
 func init() {
 	// Register launching finished listener.
@@ -23,15 +27,14 @@ func init() {
 var launched = make(chan struct{})
 
 func NewWindow() {
+	go mainthread.Take(func() {
+		C.gio_main()
+	})
 	// Wait for launching finished.
 	<-launched
 	runOnMain(func() {
 		C.gio_createWindow(800, 600)
 	})
-}
-
-func Main() {
-	C.gio_main()
 }
 
 //export gio_onFinishLaunching

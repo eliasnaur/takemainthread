@@ -13,7 +13,11 @@ extern void guipkg1_createWindow(CGFloat width, CGFloat height);
 
 */
 import "C"
-import "runtime/cgo"
+import (
+	"runtime/cgo"
+
+	"github.com/eliasnaur/takemainthread/mainthread"
+)
 
 func init() {
 	// Register launching finished listener.
@@ -23,15 +27,14 @@ func init() {
 var launched = make(chan struct{})
 
 func NewWindow() {
+	go mainthread.Take(func() {
+		C.guipkg1_main()
+	})
 	// Wait for launching finished.
 	<-launched
 	runOnMain(func() {
 		C.guipkg1_createWindow(800, 600)
 	})
-}
-
-func Main() {
-	C.guipkg1_main()
 }
 
 //export guipkg1_onFinishLaunching

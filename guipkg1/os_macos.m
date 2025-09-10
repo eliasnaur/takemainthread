@@ -20,6 +20,7 @@ void guipkg1_createWindow(CGFloat width, CGFloat height) {
 													   styleMask:styleMask
 														 backing:NSBackingStoreBuffered
 														   defer:NO];
+		window.title = @"guipkg1 window";
 		window.releasedWhenClosed = NO;
 		[window makeKeyAndOrderFront:nil];
 	}
